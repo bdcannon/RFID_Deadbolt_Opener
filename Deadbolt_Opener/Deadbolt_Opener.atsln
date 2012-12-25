@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "Deadbolt_Opener", "Deadbolt_Opener\Deadbolt_Opener.cppproj", "{4EBA7E84-F994-40A8-B4B8-D8C2C1853EB7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EBA7E84-F994-40A8-B4B8-D8C2C1853EB7}.Debug|AVR.ActiveCfg = Debug|AVR
+		{4EBA7E84-F994-40A8-B4B8-D8C2C1853EB7}.Debug|AVR.Build.0 = Debug|AVR
+		{4EBA7E84-F994-40A8-B4B8-D8C2C1853EB7}.Release|AVR.ActiveCfg = Release|AVR
+		{4EBA7E84-F994-40A8-B4B8-D8C2C1853EB7}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
