@@ -24,6 +24,16 @@ written code for barebones ATMEGA 1284 that works, but you will have to build th
 for the MCU and the servo. Also, I will write code for some Arduino variants if you don't 
 want to spend the extra time building the microcontroller and such.
 
+//////////////////////////////
+// Notes on Code
+//////////////////////////////
+I would not recommend using the code provided just yet. It is pretty crappy implementation
+and is only usable if in a Atmel Studio project for the AVR (which is actually quite nice).
+Along with creating code for the Arduino, I will most likely rewrite the code using AVR GCC 
+toolchain. Even though Atmel Studio already uses that tool chain, I'd feel more comfortable
+if I used it not from Atmel.
+
+
 /////////////////////
 // To Do's
 /////////////////////
