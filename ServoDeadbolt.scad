@@ -7,8 +7,8 @@ plate_width = 89;
 plate_height = 153;
 plate_thickness = 4.5;
 groove_diameter = 16.5;
-groove_width = 60;
-groove_width_offset = 1;
+groove_width_backplate = 60;
+groove_width_offset = 0;
 groove_position = 60;
 
 // Back plate slot settings
@@ -52,6 +52,9 @@ coupling_wall_thickness = 1.5;
 servo_couple_offset = 5;
 servo_couple_radius = (coupling_width - coupling_wall_thickness)/2;
 groove_width = 2;
+servo_arm_groove_width = 3;
+servo_arm_recess_depth = 1.5;
+servo_arm_recess_width = 2;
 
 /*
 * Still needs to be implemented
@@ -67,45 +70,55 @@ module servoHorn(horn_type){
  *
  */
 module deadBoltCoupler(coupling_width, coupling_depth, coupling_length, coupling_wall_thickness){
-	difference(){// Cut away grooves for coupling thing
-		difference(){ // Cut outs at bottom to clear thumbwheel 
-			union(){ // Create the major box of the coupling
-				for(x = [0, coupling_width]){ // Iterate to create two  long side walls
-					translate([x, 0, 0])
-					cube(size = [coupling_wall_thickness, coupling_length, coupling_depth]);
+	difference(){ // Cutout recess for servo arm
+		difference(){ // Cutout holes to zip tie the servo to this thing 
+			difference(){// Cut away grooves for coupling thing
+				difference(){ // Cut outs at bottom to clear thumbwheel 
+					union(){ // Create the major box of the coupling
+						for(x = [0, coupling_width]){ // Iterate to create two  long side walls
+							translate([x, 0, 0])
+							cube(size = [coupling_wall_thickness, coupling_length, coupling_depth]);
+						}
+						// Short side walls perpendicular to long walls
+						cube(size = [coupling_width, coupling_wall_thickness, coupling_depth]);
+						translate([0, coupling_length - coupling_wall_thickness, 0])
+						cube(size = [coupling_width, coupling_wall_thickness, coupling_depth]);
+						hull(){ // To create pretty top 
+							translate([0,0,coupling_depth]) // Move cube to the top of the coupling
+															// To be the other half of the hull
+							cube(size = [coupling_width + coupling_wall_thickness, coupling_length, coupling_wall_thickness]);
+							// Center the cylinder above coupling for the hull
+							translate([(coupling_width - coupling_wall_thickness)/2 + coupling_wall_thickness, coupling_length/2, coupling_depth + coupling_wall_thickness + servo_couple_offset])
+							cylinder(r = coupling_width/3, h = coupling_wall_thickness);
+						}
+					}
+					translate([(coupling_width - coupling_wall_thickness)/2 + coupling_wall_thickness, 0,0])
+					rotate([-90, 0, 0])
+					cylinder(r = servo_couple_radius , h = coupling_length + 1);
 				}
-				// Short side walls perpendicular to long walls
-				#cube(size = [coupling_width, coupling_wall_thickness, coupling_depth]);
-				translate([0, coupling_length - coupling_wall_thickness, 0])
-				#cube(size = [coupling_width, coupling_wall_thickness, coupling_depth]);
-				hull(){ // To create pretty top 
-					translate([0,0,coupling_depth]) // Move cube to the top of the coupling
-													// To be the other half of the hull
-					cube(size = [coupling_width + coupling_wall_thickness, coupling_length, coupling_wall_thickness]);
-					// Center the cylinder above coupling for the hull
-					translate([(coupling_width - coupling_wall_thickness)/2 + coupling_wall_thickness, coupling_length/2, coupling_depth + coupling_wall_thickness + servo_couple_offset])
-					cylinder(r = coupling_width/3, h = coupling_wall_thickness);
+				// This is very ugly...
+				for(i = [ [0, (coupling_length/16)    ,0],
+						  [0, coupling_length/4       ,0],
+						  [0, 3*(coupling_length/4) - groove_width   ,0],
+						  [0, 15*(coupling_length/16) - groove_width ,0],
+						  // Top
+						  [0, (coupling_length/16)    ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/16],
+						  [0, coupling_length/4       ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/4],
+						  [0, 3*(coupling_length/4) - groove_width   ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/4],
+						  [0, 15*(coupling_length/16) - groove_width ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/16]]){
+					translate(i)
+					cube(size = [coupling_width + coupling_wall_thickness, groove_width, 2]);
 				}
 			}
-			translate([(coupling_width - coupling_wall_thickness)/2 + coupling_wall_thickness, 0,0])
-			rotate([-90, 0, 0])
-			#cylinder(r = servo_couple_radius , h = coupling_length + 1);
+			translate([0, 2*(coupling_length/4) - groove_width ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/4])
+			cube(size = [coupling_width + coupling_wall_thickness, groove_width*2, 1]);
 		}
-		// This is very ugly...
-		for(i = [ [0, (coupling_length/16)    ,0],
-				  [0, coupling_length/4       ,0],
-				  [0, 3*(coupling_length/4) - groove_width   ,0],
-				  [0, 15*(coupling_length/16) - groove_width ,0],
-				  // Top
-				  [0, (coupling_length/16)    ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/16],
-				  [0, coupling_length/4       ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/4],
-				  [0, 3*(coupling_length/4) - groove_width   ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/4],
-				  [0, 15*(coupling_length/16) - groove_width ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/16]]){
-			translate(i)
-			#cube(size = [coupling_width + coupling_wall_thickness, groove_width, 2]);
+		translate([(coupling_width - coupling_wall_thickness)/2 + coupling_wall_thickness, coupling_length/2, coupling_depth + coupling_wall_thickness + servo_couple_offset + servo_arm_recess_depth/2])
+		for(x = [0 : 3]){
+			rotate(a = [0, 0, 90 * x])
+			#cube(size = [servo_couple_radius + 10, servo_arm_groove_width, servo_arm_recess_depth], center = true);
 		}
 	}
-		
 }
 
 module backplate(){
@@ -120,10 +133,9 @@ module backplate(){
 			cylinder(r = plate_width/2, h = plate_thickness, center= false);
 		}
 		translate([groove_width_offset,groove_position, 0]){
-				union(){
-					// The groove
-					cube(size = [groove_width, groove_diameter, plate_thickness]);
-					translate([groove_width,groove_diameter/2,0])
+				union(){// Groove
+					#cube(size = [groove_width_backplate, groove_diameter, plate_thickness]);
+					translate([groove_width_backplate,groove_diameter/2,0])
 					cylinder(r = groove_diameter/2, h = plate_thickness, center= false);
 					translate([0,groove_diameter/2,0])
 					cylinder(r = groove_diameter/2, h = plate_thickness, center= false);
@@ -184,8 +196,10 @@ difference(){
 
 //////////////////////////////////////////////
 // Place and instantiate modules for printing
+// Change the translate values or comment out
+// the module calls to move or remove parts for
+// printing
 ///////////////////////////////////////////////
-/*
 difference(){ // Create groove/trap behind plate so it will sit flush against door
 			  // when there is fasteners through the plate
 	difference(){ // subtract slots from backplate
@@ -197,12 +211,12 @@ difference(){ // Create groove/trap behind plate so it will sit flush against do
 	#slots(trap_diameter, trap_length, trap_spacing, trap_depth);
 }
 // Move rotate the servo bracket
-translate([-20, 0, 0])
+translate([-5, 55, 0])
 rotate(a = [0,0,90])
 servoBracket();
-//slots(slot_diameter, slot_length, slot_spacing, plate_thickness);
-//slots(trap_diameter, trap_length, trap_spacing, trap_depth);*/
-//servoHorn(1);
+// Move and rotate coupling
+translate([45, 63,0])
+rotate(a = [0, 0, 90])
 deadBoltCoupler(coupling_width, coupling_depth, coupling_length, coupling_wall_thickness);
 
 	
