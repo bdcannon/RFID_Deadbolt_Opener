@@ -1,5 +1,6 @@
 /*
- * This is the back mounting plate for Dead Bolt opener
+ * This is the back mounting plate for Dead Bolt opener along with a bracket to mount
+ * a servo motor
 */
 // Back Plate variables
 plate_width = 89;
@@ -27,16 +28,85 @@ trap_depth = plate_thickness - 1.5;
 
 // Servo Bracket settings
 bracket_height = 30; // The overall height of the bracket.
-bracket_reach = 25;
-bracket_base_length = 20;
-bracket_width = 30;
-bracket_thickness = 4;
+bracket_reach = 25;  // Adjust the top tab of the bracket to reach out farther
+bracket_base_length = 20; // Makes the base of bracket longer, and the slots longer
+bracket_width = 30;	// Makes the overall width of the bracket bigger. Wider = stronger
+bracket_thickness = 4; // changes the cross section thickness of the bracket
 bracket_base_slot_length = bracket_base_length / 2;
 bracket_reach_slot_length = bracket_reach / 2;
 servo_hole_diameter = 3.5;
 servo_hole_spacing = 15;
-servo_hole_offset = -8;
+servo_hole_offset = -8; // More negative number backs the holes away from the edge
 
+// Servo coupling
+// For
+//	   single servo arm  = 0
+//     Large Servo Horns = 1
+// 	   X Horns           = 2
+// 	   wheel             = 3
+horn_type = 1;
+coupling_width = 8.95;
+coupling_depth = 18;
+coupling_length = 28;
+coupling_wall_thickness = 1.5;
+servo_couple_offset = 5;
+servo_couple_radius = (coupling_width - coupling_wall_thickness)/2;
+groove_width = 2;
+
+/*
+* Still needs to be implemented
+*/
+module servoHorn(horn_type){
+	if(horn_type == 0){ // Large Horns
+		circle(r = 5);
+	}
+}
+
+/*
+ * Coupling for thumb knob
+ *
+ */
+module deadBoltCoupler(coupling_width, coupling_depth, coupling_length, coupling_wall_thickness){
+	difference(){// Cut away grooves for coupling thing
+		difference(){ // Cut outs at bottom to clear thumbwheel 
+			union(){ // Create the major box of the coupling
+				for(x = [0, coupling_width]){ // Iterate to create two  long side walls
+					translate([x, 0, 0])
+					cube(size = [coupling_wall_thickness, coupling_length, coupling_depth]);
+				}
+				// Short side walls perpendicular to long walls
+				#cube(size = [coupling_width, coupling_wall_thickness, coupling_depth]);
+				translate([0, coupling_length - coupling_wall_thickness, 0])
+				#cube(size = [coupling_width, coupling_wall_thickness, coupling_depth]);
+				hull(){ // To create pretty top 
+					translate([0,0,coupling_depth]) // Move cube to the top of the coupling
+													// To be the other half of the hull
+					cube(size = [coupling_width + coupling_wall_thickness, coupling_length, coupling_wall_thickness]);
+					// Center the cylinder above coupling for the hull
+					translate([(coupling_width - coupling_wall_thickness)/2 + coupling_wall_thickness, coupling_length/2, coupling_depth + coupling_wall_thickness + servo_couple_offset])
+					cylinder(r = coupling_width/3, h = coupling_wall_thickness);
+				}
+			}
+			translate([(coupling_width - coupling_wall_thickness)/2 + coupling_wall_thickness, 0,0])
+			rotate([-90, 0, 0])
+			#cylinder(r = servo_couple_radius , h = coupling_length + 1);
+		}
+		// This is very ugly...
+		for(i = [ [0, (coupling_length/16)    ,0],
+				  [0, coupling_length/4       ,0],
+				  [0, 3*(coupling_length/4) - groove_width   ,0],
+				  [0, 15*(coupling_length/16) - groove_width ,0],
+				  // Top
+				  [0, (coupling_length/16)    ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/16],
+				  [0, coupling_length/4       ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/4],
+				  [0, 3*(coupling_length/4) - groove_width   ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/4],
+				  [0, 15*(coupling_length/16) - groove_width ,(coupling_depth + coupling_wall_thickness/1.125) + (servo_couple_offset/(coupling_length/2 - servo_couple_radius))*coupling_length/16]]){
+			translate(i)
+			#cube(size = [coupling_width + coupling_wall_thickness, groove_width, 2]);
+		}
+	}
+		
+}
 
 module backplate(){
 	difference(){
@@ -62,6 +132,9 @@ module backplate(){
 	}
 }
 
+/*
+*	Utility module for creating slots
+*/
 module slots(slot_diameter, slot_length, slot_spacing, plate_thickness){
 echo (slot_length);
 	for(x = [(-slot_spacing/2), (slot_spacing/2)]){
@@ -78,6 +151,9 @@ echo (slot_length);
 	}
 }
 
+/*
+* 	Bracket for mounting servo to backplate
+*/
 module servoBracket(){
 difference(){
 	difference(){ // Difference for base slots
@@ -106,7 +182,10 @@ difference(){
 }
 }
 
-// Make a plate
+//////////////////////////////////////////////
+// Place and instantiate modules for printing
+///////////////////////////////////////////////
+/*
 difference(){ // Create groove/trap behind plate so it will sit flush against door
 			  // when there is fasteners through the plate
 	difference(){ // subtract slots from backplate
@@ -117,11 +196,15 @@ difference(){ // Create groove/trap behind plate so it will sit flush against do
 	translate([slot_width_offset + (slot_diameter/2 - trap_diameter/2) ,slot_height_offset ,0])
 	#slots(trap_diameter, trap_length, trap_spacing, trap_depth);
 }
+// Move rotate the servo bracket
 translate([-20, 0, 0])
 rotate(a = [0,0,90])
 servoBracket();
 //slots(slot_diameter, slot_length, slot_spacing, plate_thickness);
-//slots(trap_diameter, trap_length, trap_spacing, trap_depth);
+//slots(trap_diameter, trap_length, trap_spacing, trap_depth);*/
+//servoHorn(1);
+deadBoltCoupler(coupling_width, coupling_depth, coupling_length, coupling_wall_thickness);
+
 	
 	
 	
