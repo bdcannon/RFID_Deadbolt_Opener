@@ -3,23 +3,23 @@
  * a servo motor
 */
 // Back Plate variables
-plate_width = 89;
-plate_height = 153;
+plate_width = 107;
+plate_height = 100;
 plate_thickness = 4.5;
-groove_diameter = 16.5;
+groove_diameter = 20;
 groove_width_backplate = 60;
 groove_width_offset = 0;
-groove_position = 60;
+groove_position = 40;
 
 // Back plate slot settings
-slot_diameter = 4;
-slot_length = 60;
+slot_diameter = 3.25;
+slot_length = 40;
 slot_spacing = 10;
-slot_width_offset = plate_width/2;
-slot_height_offset = -10;
+slot_width_offset = plate_width/2 - 15;
+slot_height_offset = -15;
 
 // Trap slot settings
-trap_diameter = slot_diameter + 2;
+trap_diameter = slot_diameter + 3;
 trap_length = slot_length;
 trap_spacing = slot_spacing;
 trap_width_offset = slot_width_offset;
@@ -45,9 +45,9 @@ servo_hole_offset = -8; // More negative number backs the holes away from the ed
 // 	   X Horns           = 2
 // 	   wheel             = 3
 horn_type = 1;
-coupling_width = 8.95;
+coupling_width = 16;
 coupling_depth = 18;
-coupling_length = 28;
+coupling_length = 45;
 coupling_wall_thickness = 1.5;
 servo_couple_offset = 5;
 servo_couple_radius = (coupling_width - coupling_wall_thickness)/2;
@@ -55,6 +55,11 @@ groove_width = 2;
 servo_arm_groove_width = 3;
 servo_arm_recess_depth = 1.5;
 servo_arm_recess_width = 2;
+
+//Button Panel
+button_hole_diameter = 16;
+button_spacing = 25;
+panel_padding = 15;			// Padding (extra meat around panel edges)
 
 /*
 * Still needs to be implemented
@@ -194,12 +199,32 @@ difference(){
 }
 }
 
+/*
+* This is a 3 button button panel for these fancy momentary switches from adafruit
+* 
+**/
+module buttonPanel(){
+		difference(){
+				translate([-button_hole_diameter/2 - panel_padding/2, -button_hole_diameter/2 - panel_padding/2 ,0])
+					cube([button_hole_diameter + button_spacing + panel_padding, button_hole_diameter + button_spacing + panel_padding,plate_thickness]);
+				union(){
+					cylinder(r=button_hole_diameter/2, h = plate_thickness);
+					translate([button_spacing, 0, 0])
+						cylinder(r=button_hole_diameter/2, h = plate_thickness);
+					translate([button_spacing/2, button_spacing, 0])
+						cylinder(r=button_hole_diameter/2, h = plate_thickness);
+				}
+	}
+		
+}
+
 //////////////////////////////////////////////
 // Place and instantiate modules for printing
 // Change the translate values or comment out
 // the module calls to move or remove parts for
 // printing
 ///////////////////////////////////////////////
+/*
 difference(){ // Create groove/trap behind plate so it will sit flush against door
 			  // when there is fasteners through the plate
 	difference(){ // subtract slots from backplate
@@ -211,13 +236,14 @@ difference(){ // Create groove/trap behind plate so it will sit flush against do
 	#slots(trap_diameter, trap_length, trap_spacing, trap_depth);
 }
 // Move rotate the servo bracket
-translate([-5, 55, 0])
+translate([-2, 25, 0])
 rotate(a = [0,0,90])
 servoBracket();
 // Move and rotate coupling
-translate([45, 63,0])
+translate([50, 41.5,0])
 rotate(a = [0, 0, 90])
-deadBoltCoupler(coupling_width, coupling_depth, coupling_length, coupling_wall_thickness);
+deadBoltCoupler(coupling_width, coupling_depth, coupling_length, coupling_wall_thickness);*/
+buttonPanel();
 
 	
 	

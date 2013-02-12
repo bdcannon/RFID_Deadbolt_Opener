@@ -2,24 +2,24 @@ EAGLE AutoRouter Statistics:
 
 Job           : /Users/bencannon/Documents/github/RFID_Deadbolt_Opener/eagle/RFID1284/RFID1284.brd
 
-Start at      : 20:28:14 (12/29/12)
-End at        : 20:28:14 (12/29/12)
-Elapsed time  : 00:00:00
+Start at      : 20:02:45 (1/18/13)
+End at        : 20:02:48 (1/18/13)
+Elapsed time  : 00:00:03
 
-Signals       :     9   RoutingGrid: 50 mil  Layers: 2
-Connections   :    35   predefined:  0 ( 0 Vias )
+Signals       :    40   RoutingGrid: 50 mil  Layers: 1
+Connections   :    88   predefined:  1 ( 0 Vias )
 
-Router memory :   19008
+Router memory :   13578
 
-Passname          :    Busses     Route Optimize1 Optimize2 Optimize3 Optimize4
+Passname          :     Route Optimize1 Optimize2 Optimize3 Optimize4
 
-Time per pass     :  00:00:00  00:00:00  00:00:00  00:00:00  00:00:00  00:00:00
-Number of Ripups  :         0         0         0         0         0         0
-max. Level        :         0         0         0         0         0         0
-max. Total        :         0         0         0         0         0         0
+Time per pass     :  00:00:03  00:00:00  00:00:00  00:00:00  00:00:00
+Number of Ripups  :       193         0         0         0         0
+max. Level        :         5         0         0         0         0
+max. Total        :        36         0         0         0         0
 
-Routed            :         2        33        33        33        33        33
-Vias              :         0        28         1         0         0         0
-Resolution        :     5.7 %    94.3 %    94.3 %    94.3 %    94.3 %    94.3 %
+Routed            :        87        87        87        87        87
+Vias              :         0         0         0         0         0
+Resolution        :   100.0 %   100.0 %   100.0 %   100.0 %   100.0 %
 
-Final             : 94.3% finished
+Final             : 100.0% finished
