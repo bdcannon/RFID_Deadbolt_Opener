@@ -29,16 +29,16 @@ want to spend the extra time building the microcontroller and such.
 //////////////////////////////
 I would not recommend using the code provided just yet. It is pretty crappy implementation
 and is only usable if in a Atmel Studio project for the AVR (which is actually quite nice).
-Along with creating code for the Arduino, I will most likely rewrite the code using AVR GCC 
-toolchain. Even though Atmel Studio already uses that tool chain, I'd feel more comfortable
-if I used it not from Atmel.
+
+It is possible, with some tweaking to use and upload this code directly from the Arduino IDE
+to an ATMega1284P with a bootloader on it. 
 
 
 /////////////////////
 // To Do's
 /////////////////////
 + Finish code for ATMEGA1284 and Arduino variants
-+ Create PCB and schematic for those who want to make their own MCU
++ Translate code for Arduino Variants
 + Rework coupling
 	- Better method of directly connecting the servo to coupling
 + Rework servo bracket
